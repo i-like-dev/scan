@@ -61,7 +61,7 @@ button:hover { box-shadow:0 0 15px #00ffff; transform:scale(1.05);}
 
 <div class="glass-box" id="mainBox" style="display:none;">
   <h2>🧬 生成專用 QR Code</h2>
-  <input type="text" id="url" placeholder="輸入網址">
+  <input type="text" id="url" placeholder="輸入網址（例如 https://example.com）">
   <button onclick="generate()">生成 QR</button>
   <div id="qrcode"></div>
   <button onclick="downloadQR()">⬇️ 下載 PNG</button>
@@ -85,7 +85,7 @@ function encrypt(url){
 function generate(){
   const url = document.getElementById('url').value.trim();
   if(!url) return alert("請輸入網址！");
-  const final = location.origin+"/scan.html#"+encrypt(url);
+  const final = location.origin+"/index.html#"+encrypt(url); // 對應首頁 index.html
   const qrcodeContainer = document.getElementById("qrcode");
   qrcodeContainer.innerHTML = "";
 
@@ -95,6 +95,7 @@ function generate(){
     errorCorrectionLevel: 'H' 
   }, function (err, canvas) {
     if(err) console.error(err);
+    // 圓形效果
     const ctx = canvas.getContext('2d');
     const imgData = ctx.getImageData(0,0,canvas.width,canvas.height);
     const data = imgData.data;
