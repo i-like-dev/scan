@@ -60,7 +60,7 @@ html5QrCode.start(
   { facingMode: "environment" },
   { fps: 10, qrbox: 250 },
   qrCodeMessage => {
-    if(qrCodeMessage.includes("/scan.html#")){
+    if(qrCodeMessage.includes("/index.html#")){
       const encoded = qrCodeMessage.split("#")[1];
       const link = decrypt(encoded);
       if(link){
@@ -69,7 +69,8 @@ html5QrCode.start(
         location.href = link;
       } else alert("⚠️ 非授權 QR Code");
     } else alert("❌ 非本系統 QR Code");
-  }
+  },
+  errorMessage => { /* 可選錯誤處理 */ }
 );
 </script>
 
