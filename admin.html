@@ -7,61 +7,27 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
 <style>
-body {
-  font-family: 'Noto Sans TC', sans-serif;
-  background: radial-gradient(circle at 20% 20%, #3a3a9f, #0d0d23);
-  color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  margin: 0;
-}
-.glass-box {
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(15px);
-  border-radius: 20px;
-  padding: 40px;
-  text-align: center;
-  box-shadow: 0 0 40px rgba(0,255,255,0.2);
-  width: 360px;
-}
-input, button {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 10px;
-  border: none;
-  font-size: 1rem;
-}
-input {
-  background: rgba(255,255,255,0.15);
-  color: white;
-  text-align: center;
-}
-input::placeholder { color: rgba(255,255,255,0.6);}
-button {
-  background: linear-gradient(90deg,#007bff,#8a2be2);
-  color: white;
-  cursor: pointer;
-  transition: 0.3s;
-}
-button:hover { box-shadow:0 0 15px #00ffff; transform:scale(1.05);}
-#qrcode { margin-top: 20px; }
+body { font-family:'Noto Sans TC',sans-serif; background:#0d0d23; color:white; display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; margin:0;}
+.glass-box { background: rgba(255,255,255,0.08); backdrop-filter: blur(15px); border-radius: 20px; padding: 40px; text-align:center; width:360px; box-shadow:0 0 40px rgba(0,255,255,0.2);}
+input,button { width:100%; padding:10px; margin:10px 0; border-radius:10px; border:none; font-size:1rem;}
+input { background: rgba(255,255,255,0.15); color:white; text-align:center;}
+input::placeholder{color:rgba(255,255,255,0.6);}
+button { background: linear-gradient(90deg,#007bff,#8a2be2); color:white; cursor:pointer; transition:0.3s;}
+button:hover{box-shadow:0 0 15px #00ffff; transform:scale(1.05);}
+#qrcode{margin-top:20px;}
 </style>
 </head>
 <body>
 
 <div class="glass-box" id="loginBox">
-  <h2>🔐 科技喵管理員登入</h2>
+  <h2>🔐 管理員登入</h2>
   <input type="password" id="pwd" placeholder="輸入密碼">
   <button onclick="checkPwd()">登入</button>
 </div>
 
 <div class="glass-box" id="mainBox" style="display:none;">
-  <h2>🧬 生成專用 QR Code</h2>
-  <input type="text" id="url" placeholder="輸入網址（例如 https://example.com）">
+  <h2>🧬 生成專用 QR</h2>
+  <input type="text" id="url" placeholder="輸入網址 (例如 https://example.com)">
   <button onclick="generate()">生成 QR</button>
   <div id="qrcode"></div>
   <button onclick="downloadQR()">⬇️ 下載 PNG</button>
@@ -77,29 +43,28 @@ function checkPwd(){
   } else alert("密碼錯誤！");
 }
 
+// 加密函數
 function encrypt(url){
-  const text = url + SECRET_SIG;
-  return btoa(unescape(encodeURIComponent(text))).split("").reverse().join("");
+  return btoa(unescape(encodeURIComponent(url+SECRET_SIG))).split("").reverse().join("");
 }
 
 function generate(){
   const url = document.getElementById('url').value.trim();
   if(!url) return alert("請輸入網址！");
-  const final = location.origin+"/index.html#"+encrypt(url); // 對應首頁 index.html
+  const final = location.origin+"/index.html#"+encrypt(url);
   const qrcodeContainer = document.getElementById("qrcode");
   qrcodeContainer.innerHTML = "";
 
-  QRCode.toCanvas(final, { 
-    width: 220, 
-    color: { dark:"#000000", light:"#ffffff" }, 
-    errorCorrectionLevel: 'H' 
-  }, function (err, canvas) {
+  QRCode.toCanvas(final,{
+    width:220,
+    color:{dark:"#000000",light:"#ffffff"},
+    errorCorrectionLevel:'H'
+  }, function(err,canvas){
     if(err) console.error(err);
-    // 圓形效果
     const ctx = canvas.getContext('2d');
     const imgData = ctx.getImageData(0,0,canvas.width,canvas.height);
     const data = imgData.data;
-    const r = 3;
+    const r=3;
     ctx.clearRect(0,0,canvas.width,canvas.height);
     for(let y=0;y<canvas.height;y+=r*2){
       for(let x=0;x<canvas.width;x+=r*2){
@@ -117,11 +82,11 @@ function generate(){
 }
 
 function downloadQR(){
-  const canvas = document.querySelector("#qrcode canvas");
-  if(!canvas) return alert("請先生成 QR Code！");
-  const link = document.createElement('a');
-  link.download = "TechMeow_QR.png";
-  link.href = canvas.toDataURL("image/png");
+  const canvas=document.querySelector("#qrcode canvas");
+  if(!canvas) return alert("請先生成 QR！");
+  const link=document.createElement('a');
+  link.download="TechMeow_QR.png";
+  link.href=canvas.toDataURL("image/png");
   link.click();
 }
 </script>
