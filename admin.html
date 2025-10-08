@@ -6,7 +6,6 @@
 <title>科技喵 - 專用QR生成器</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.10/minified/html5-qrcode.min.js"></script>
 <style>
 body {
   font-family: 'Noto Sans TC', sans-serif;
@@ -27,7 +26,6 @@ body {
   text-align: center;
   box-shadow: 0 0 40px rgba(0,255,255,0.2);
   width: 360px;
-  margin-bottom: 20px;
 }
 input, button {
   width: 100%;
@@ -51,9 +49,6 @@ button {
 }
 button:hover { box-shadow:0 0 15px #00ffff; transform:scale(1.05);}
 #qrcode { margin-top: 20px; }
-#preview { width: 300px; height: 300px; margin-top:20px; border-radius:15px; overflow:hidden; position:relative;}
-.laser { position:absolute; top:0; left:0; width:100%; height:3px; background: linear-gradient(90deg, transparent, cyan, transparent); animation: scan 2s infinite linear; }
-@keyframes scan {0%{top:0}50%{top:calc(100%-3px)}100%{top:0}}
 </style>
 </head>
 <body>
@@ -70,9 +65,6 @@ button:hover { box-shadow:0 0 15px #00ffff; transform:scale(1.05);}
   <button onclick="generate()">生成 QR</button>
   <div id="qrcode"></div>
   <button onclick="downloadQR()">⬇️ 下載 PNG</button>
-  <div id="preview">
-    <div class="laser"></div>
-  </div>
 </div>
 
 <script>
@@ -82,7 +74,6 @@ function checkPwd(){
   if(document.getElementById('pwd').value==="0710"){
     loginBox.style.display="none";
     mainBox.style.display="block";
-    startPreviewScan();
   } else alert("密碼錯誤！");
 }
 
@@ -131,12 +122,6 @@ function downloadQR(){
   link.download = "TechMeow_QR.png";
   link.href = canvas.toDataURL("image/png");
   link.click();
-}
-
-// 即時掃描預覽（不開啟網頁，只示意雷射動畫）
-function startPreviewScan(){
-  const preview = document.getElementById("preview");
-  // 可以在此加實時掃描預覽或雷射動畫
 }
 </script>
 
