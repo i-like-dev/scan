@@ -7,31 +7,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.10/minified/html5-qrcode.min.js"></script>
 <style>
-body {
-  font-family: 'Noto Sans TC', sans-serif;
-  background: radial-gradient(circle at 20% 20%, #0d0d23, #3a3a9f);
-  color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  margin: 0;
-  overflow: hidden;
-}
-.scanner-box {
-  position: relative;
-  background: rgba(255,255,255,0.08);
-  border-radius: 20px;
-  padding: 20px;
-  width: 340px;
-  box-shadow: 0 0 40px rgba(0,255,255,0.2);
-  text-align: center;
-}
-h1 { text-shadow:0 0 15px cyan; margin-bottom:10px; }
-#reader { width: 300px; height: 300px; margin: 0 auto; border-radius: 15px; overflow: hidden; }
-.laser { position:absolute; top:0; left:0; width:100%; height:3px; background: linear-gradient(90deg, transparent, cyan, transparent); animation: scan 2s infinite linear; }
-@keyframes scan {0%{top:0}50%{top:calc(100%-3px)}100%{top:0}}
+body { font-family:'Noto Sans TC',sans-serif; background:#0d0d23; color:white; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; margin:0; overflow:hidden;}
+.scanner-box { position:relative; background: rgba(255,255,255,0.08); border-radius:20px; padding:20px; width:340px; box-shadow:0 0 40px rgba(0,255,255,0.2); text-align:center;}
+h1{text-shadow:0 0 15px cyan;margin-bottom:10px;}
+#reader{width:300px;height:300px;margin:0 auto;border-radius:15px;overflow:hidden;}
+.laser{position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,transparent,cyan,transparent);animation:scan 2s infinite linear;}
+@keyframes scan{0%{top:0}50%{top:calc(100%-3px)}100%{top:0}}
 </style>
 </head>
 <body>
@@ -55,22 +36,23 @@ function decrypt(encoded){
   }catch{return null;}
 }
 
+// 啟動相機掃描
 const html5QrCode = new Html5Qrcode("reader");
 html5QrCode.start(
   { facingMode: "environment" },
   { fps: 10, qrbox: 250 },
-  qrCodeMessage => {
+  qrCodeMessage=>{
     if(qrCodeMessage.includes("/index.html#")){
-      const encoded = qrCodeMessage.split("#")[1];
-      const link = decrypt(encoded);
+      const encoded=qrCodeMessage.split("#")[1];
+      const link=decrypt(encoded);
       if(link){
         html5QrCode.stop();
         alert("✅ 驗證成功，開啟專屬頁面");
-        location.href = link;
-      } else alert("⚠️ 非授權 QR Code");
-    } else alert("❌ 非本系統 QR Code");
+        location.href=link;
+      }else alert("⚠️ 非授權 QR Code");
+    }else alert("❌ 非本系統 QR Code");
   },
-  errorMessage => { /* 可選錯誤處理 */ }
+  errorMessage=>{}
 );
 </script>
 
