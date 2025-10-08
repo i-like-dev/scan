@@ -36,24 +36,33 @@ function decrypt(encoded){
   }catch{return null;}
 }
 
-// 啟動相機掃描
-const html5QrCode = new Html5Qrcode("reader");
-html5QrCode.start(
-  { facingMode: "environment" },
-  { fps: 10, qrbox: 250 },
-  qrCodeMessage=>{
-    if(qrCodeMessage.includes("/index.html#")){
-      const encoded=qrCodeMessage.split("#")[1];
-      const link=decrypt(encoded);
-      if(link){
-        html5QrCode.stop();
-        alert("✅ 驗證成功，開啟專屬頁面");
-        location.href=link;
-      }else alert("⚠️ 非授權 QR Code");
-    }else alert("❌ 非本系統 QR Code");
-  },
-  errorMessage=>{}
-);
+function startScanner(){
+  const html5QrCode = new Html5Qrcode("reader");
+  html5QrCode.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: 250 },
+    qrCodeMessage=>{
+      if(qrCodeMessage.includes("/index.html#")){
+        const encoded=qrCodeMessage.split("#")[1];
+        const link=decrypt(encoded);
+        if(link){
+          html5QrCode.stop().then(()=>{
+            alert("✅ 驗證成功，開啟專屬頁面");
+            location.href=link;
+          });
+        } else alert("⚠️ 非授權 QR Code");
+      } else alert("❌ 非本系統 QR Code");
+    },
+    errorMessage=>{
+      // 可忽略掃描過程錯誤
+    }
+  ).catch(err=>{
+    alert("❌ 無法啟動相機: "+err);
+  });
+}
+
+// 啟動掃描器
+window.onload=startScanner;
 </script>
 
 </body>
